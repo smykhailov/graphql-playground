@@ -3,7 +3,7 @@ schema {
 }
 
 type Query {
-  feed: FeedResult
+  feed: [FeedResult]
 }
 
 type FeedResult {
