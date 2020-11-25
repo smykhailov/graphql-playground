@@ -20,3 +20,7 @@ tools/
 src/assets/
 **/assets/**
 **/assets/**/*.*
+
+# generated code
+**/generated/**
+**/generated/**/*.*
