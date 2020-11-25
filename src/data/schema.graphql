@@ -1,0 +1,13 @@
+schema {
+  query: Query
+}
+
+type Query {
+  feed: FeedResult
+}
+
+type FeedResult {
+  id: ID!
+  title: String!
+  description: String!
+}

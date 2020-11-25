@@ -1,0 +1,7 @@
+query feed {
+  feed {
+    id
+    title
+    description
+  }
+}
