@@ -16,6 +16,9 @@ generates:
       contextType: ../graphql-context#IGraphQLContext
       immutableTypes: true
       maybeValue: T | undefined
+  src/data/generated/introspection.json:
+    plugins:
+      - introspection
 hooks:
   afterOneFileWrite:
     - prettier --write
