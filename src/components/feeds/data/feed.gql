@@ -1,5 +1,5 @@
 query feeds {
-  feeds @client {
+  feeds {
     id
     title
     description

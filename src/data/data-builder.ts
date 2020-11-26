@@ -6,18 +6,29 @@ import {
 } from '@apollo/client';
 
 import { SchemaLink } from '@apollo/client/link/schema';
-
-// import { loadSchema } from '@graphql-tools/load';
-// import { JsonFileLoader } from '@graphql-tools/json-file-loader';
+import { makeExecutableSchema } from '@graphql-tools/schema';
 
 import { QueryResolvers, Resolvers } from './generated/graphql';
 import { feedResolver } from './resolver/feed-resolvers';
 
-import schema from './generated/schema';
-import createGraphQLContext from './graphql-context';
+import typeDefs from './generated/schema';
 
-//// eslint-disable-next-line import/no-webpack-loader-syntax
-//const schema = require('raw-loader!./schema.graphql');
+import createGraphQLContext, { IGraphQLContext } from './graphql-context';
+
+export const buildClient: () => ApolloClient<NormalizedCacheObject> = () => {
+  const schema = makeExecutableSchema<IGraphQLContext>({
+    typeDefs: typeDefs,
+    resolvers: buildResolvers(),
+  });
+
+  return new ApolloClient({
+    cache: new InMemoryCache(),
+    link: new SchemaLink({
+      schema: schema,
+      context: createGraphQLContext(),
+    }),
+  });
+};
 
 const queryResolvers: QueryResolvers = { feeds: feedResolver };
 
@@ -28,20 +39,4 @@ const buildResolvers: () => ApolloResolvers = () => {
 
   // TODO: is it possible to make resolvers compatible with ApolloClient resolvers?
   return resolvers as ApolloResolvers;
-};
-
-export const buildClient: () => ApolloClient<NormalizedCacheObject> = () => {
-  // const schema = await loadSchema('./generated/introspection.json', {
-  //   // load from local json file
-  //   loaders: [new JsonFileLoader()],
-  // });
-
-  return new ApolloClient({
-    cache: new InMemoryCache(),
-    link: new SchemaLink({
-      schema: schema as any,
-      context: createGraphQLContext(),
-    }),
-    resolvers: buildResolvers(),
-  });
 };
