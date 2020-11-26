@@ -8,13 +8,5 @@ export const feedResolver: ResolverFn<
   IGraphQLContext,
   object
 > = async (_: object, __: object, context: IGraphQLContext) => {
-  // return [
-  //   {
-  //     id: '1',
-  //     title: 'asdfasf',
-  //     description: 'asdf',
-  //   },
-  // ];
-
   return await context.feeds();
 };
