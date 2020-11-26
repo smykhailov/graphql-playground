@@ -3,10 +3,10 @@ schema {
 }
 
 type Query {
-  feed: [FeedResult]
+  feeds: [Feed]
 }
 
-type FeedResult {
+type Feed {
   id: ID!
   title: String!
   description: String!

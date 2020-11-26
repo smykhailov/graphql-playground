@@ -7,4 +7,17 @@ generates:
       - 'typescript'
       - 'typescript-operations'
       - 'typescript-react-apollo'
+      - 'typescript-resolvers'
       # - 'typescript-document-nodes'
+    config:
+      withComponent: false
+      withHOC: false
+      withHooks: true
+      contextType: ../graphql-context#IGraphQLContext
+      immutableTypes: true
+      maybeValue: T | undefined
+  src/data/generated/schema.ts:
+    - ./src/typescript-typedefs.js:
+hooks:
+  afterOneFileWrite:
+    - prettier --write
