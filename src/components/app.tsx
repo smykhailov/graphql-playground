@@ -1,32 +1,14 @@
-import React from 'react';
-import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client';
 
-import Feed from './feed';
-
-const resolvers = {
-  Query: {
-    feed: () => {
-      return [
-        {
-          id: '1',
-          title: 'First Feed',
-          description: 'some feed',
-        },
-      ];
-    },
-  },
-};
-
-const client = new ApolloClient({
-  cache: new InMemoryCache(),
-  resolvers: resolvers,
-});
+import FeedList from './feeds/feeds-list';
+import { buildClient } from 'data/data-builder';
 
 const App = () => {
+  const client = buildClient();
+
   return (
     <ApolloProvider client={client}>
-      <div>Ostapoff Basic CRA Template</div>
-      <Feed />
+      <FeedList />
     </ApolloProvider>
   );
 };
