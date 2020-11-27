@@ -17,5 +17,5 @@ export const feedStreamResolver: ResolverFn<
   IGraphQLContext,
   object
 > = async (_: object, __: object, context: IGraphQLContext) => {
-  return await context.feeds();
+  return await context.feedsStream();
 };
