@@ -1,7 +1,9 @@
 import { useFeedStreamQuery } from 'data/generated/graphql';
 
 const FeedStream = () => {
-  const { data, loading, error } = useFeedStreamQuery();
+  const { data, loading, error } = useFeedStreamQuery({
+    variables: { initialCount: 10 },
+  });
 
   if (loading) {
     return <div>Loading...</div>;
@@ -10,6 +12,8 @@ const FeedStream = () => {
   if (error) {
     return <div>Error {error}</div>;
   }
+
+  console.error(data);
 
   return (
     <div>

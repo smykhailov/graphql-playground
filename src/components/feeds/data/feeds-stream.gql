@@ -1,5 +1,5 @@
-query feedStream {
-  feedStream {
+query feedStream($initialCount: Int!) {
+  feedStream(initialCount: $initialCount) @stream(initialCount: $initialCount) {
     id
     title
     description
