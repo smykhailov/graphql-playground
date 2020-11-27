@@ -9,7 +9,7 @@ import { SchemaLink } from '@apollo/client/link/schema';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 
 import { QueryResolvers, Resolvers } from './generated/graphql';
-import { feedResolver } from './resolver/feed-resolvers';
+import { feedResolver, feedStreamResolver } from './resolver/feed-resolvers';
 
 import typeDefs from './generated/schema';
 
@@ -30,7 +30,10 @@ export const buildClient: () => ApolloClient<NormalizedCacheObject> = () => {
   });
 };
 
-const queryResolvers: QueryResolvers = { feeds: feedResolver };
+const queryResolvers: QueryResolvers = {
+  feeds: feedResolver,
+  feedStream: feedStreamResolver,
+};
 
 const buildResolvers: () => ApolloResolvers = () => {
   const resolvers: Resolvers = {

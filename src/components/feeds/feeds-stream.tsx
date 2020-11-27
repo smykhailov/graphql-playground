@@ -1,7 +1,7 @@
-import { useFeedsQuery } from 'data/generated/graphql';
+import { useFeedStreamQuery } from 'data/generated/graphql';
 
-const FeedList = () => {
-  const { data, loading, error } = useFeedsQuery();
+const FeedStream = () => {
+  const { data, loading, error } = useFeedStreamQuery();
 
   if (loading) {
     return <div>Loading...</div>;
@@ -13,9 +13,9 @@ const FeedList = () => {
 
   return (
     <div>
-      <h3>Feeds List</h3>
+      <h3>Feeds Stream</h3>
       <ul>
-        {data?.feeds?.map((item) => {
+        {data?.feedStream?.map((item) => {
           return <li key={item?.id}>{item?.title}</li>;
         })}
       </ul>
@@ -23,4 +23,4 @@ const FeedList = () => {
   );
 };
 
-export default FeedList;
+export default FeedStream;

@@ -1,14 +1,15 @@
 import { ApolloProvider } from '@apollo/client';
 
-import FeedList from './feeds/feeds-list';
 import { buildClient } from 'data/data-builder';
+
+import FeedsContainer from './feeds/feeds-container';
 
 const App = () => {
   const client = buildClient();
 
   return (
     <ApolloProvider client={client}>
-      <FeedList />
+      <FeedsContainer />
     </ApolloProvider>
   );
 };

@@ -4,6 +4,7 @@ schema {
 
 type Query {
   feeds: [Feed]
+  feedStream: [Feed]
 }
 
 type Feed {
