@@ -7,7 +7,6 @@ import {
   ApolloLink,
 } from '@apollo/client';
 
-import { SchemaLink } from '@apollo/client/link/schema';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 
 import { QueryResolvers, Resolvers } from './generated/graphql';
@@ -16,6 +15,13 @@ import { feedResolver, feedStreamResolver } from './resolver/feed-resolvers';
 import typeDefs from './generated/schema';
 
 import createGraphQLContext, { IGraphQLContext } from './graphql-context';
+import { StreamLink } from './link/StreamLink';
+
+const logger = new ApolloLink((operation, forward) => {
+  return forward(operation).map((data) => {
+    return data;
+  });
+});
 
 export const buildClient: () => ApolloClient<NormalizedCacheObject> = () => {
   const schema = makeExecutableSchema<IGraphQLContext>({
@@ -24,28 +30,21 @@ export const buildClient: () => ApolloClient<NormalizedCacheObject> = () => {
   });
 
   const link = from([
-    streamLink,
-    new SchemaLink({
-      schema: schema,
-      context: createGraphQLContext(),
-    }),
+    logger,
+    new StreamLink(
+      {
+        schema: schema,
+        context: createGraphQLContext(),
+      },
+      buildResolvers()
+    ),
   ]);
 
   return new ApolloClient({
     cache: new InMemoryCache(),
-    link: link,
+    link,
   });
 };
-
-const streamLink = new ApolloLink((operation, forward) => {
-  operation.setContext({ start: new Date() });
-
-  console.log(`starting request for ${operation.operationName}`);
-  return forward(operation).map((data) => {
-    console.log(`ending request for ${operation.operationName}`);
-    return data;
-  });
-});
 
 const queryResolvers: QueryResolvers = {
   feeds: feedResolver,

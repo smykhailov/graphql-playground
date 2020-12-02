@@ -4,11 +4,11 @@ schema {
 
 type Query {
   feeds: [Feed]
-  feedStream(initialCount: Int!): [Feed]
+  feedStream: Feed
 }
 
 type Feed {
-  id: ID!
-  title: String!
-  description: String!
+  id: ID
+  title: String
+  description: String
 }

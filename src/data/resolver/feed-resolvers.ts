@@ -1,5 +1,7 @@
-import { Feed, QueryFeedStreamArgs, ResolverFn } from 'data/generated/graphql';
+import { Feed, ResolverFn } from 'data/generated/graphql';
 import { IGraphQLContext } from 'data/graphql-context';
+import { sleep } from 'data/utils/sleep';
+import faker from 'faker';
 
 // TODO: is there simplified way to declare resolver type?
 export const feedResolver: ResolverFn<
@@ -13,12 +15,28 @@ export const feedResolver: ResolverFn<
 
 export async function* feedStreamResolver(
   _: object,
-  args: QueryFeedStreamArgs,
+  args: any,
   context: IGraphQLContext
 ) {
-  for (let i = 0; i < 10; i++) {
-    return yield i.toString();
-  }
+  yield {
+    id: 134,
+    title: faker.random.words(5),
+    description: faker.random.words(25),
+  };
+}
 
-  //  context.feedsStream(args.initialCount);
+export async function* feedStreamResolver1(
+  _: object,
+  args: any,
+  context: IGraphQLContext
+) {
+  console.log('feed stream resolver NEW');
+  for (let i = 0; i < 10; i++) {
+    yield {
+      id: i.toString(),
+      title: faker.random.words(5),
+      description: faker.random.words(25),
+    };
+    await sleep(1000);
+  }
 }

@@ -43,10 +43,13 @@
   "dependencies": {
     "@apollo/client": "^3.2.9",
     "faker": "^5.1.0",
-    "graphql": "^15.4.0-experimental-stream-defer.1",
+    "graphql": "15.4.0-experimental-stream-defer.1",
     "graphql-tools": "^7.0.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
+  },
+  "resolutions": {
+    "graphql": "15.4.0-experimental-stream-defer.1"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "1.19.2",
