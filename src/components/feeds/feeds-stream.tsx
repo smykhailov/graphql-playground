@@ -15,9 +15,9 @@ const FeedStream = () => {
     <div>
       <h3>Feeds Stream</h3>
       <ul>
-        {/* {data?.feedStream?.map((item) => {
+        {data?.feedStream?.map((item) => {
           return <li key={item?.id}>{item?.title}</li>;
-        })} */}
+        })}
       </ul>
     </div>
   );
