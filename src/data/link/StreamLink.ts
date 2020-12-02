@@ -17,7 +17,6 @@ export class StreamLink extends SchemaLink {
         )
       )
         .then(async (context) => {
-          debugger;
           const result = await execute(
             this.schema,
             operation.query,
@@ -26,8 +25,6 @@ export class StreamLink extends SchemaLink {
             operation.variables,
             operation.operationName
           );
-
-          console.log(result);
 
           return result;
         })

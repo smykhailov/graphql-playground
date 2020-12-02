@@ -18,11 +18,14 @@ export async function* feedStreamResolver(
   args: any,
   context: IGraphQLContext
 ) {
-  yield {
-    id: 134,
-    title: faker.random.words(5),
-    description: faker.random.words(25),
-  };
+  for (let i = 0; i < 10; i++) {
+    yield {
+      id: i.toString(),
+      title: faker.random.words(5),
+      description: faker.random.words(25),
+    };
+    await sleep(100);
+  }
 }
 
 export async function* feedStreamResolver1(
