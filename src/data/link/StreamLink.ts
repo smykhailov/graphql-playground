@@ -41,7 +41,7 @@ export class StreamLink extends SchemaLink {
                   set(
                     value.data,
                     data.value.path.filter(
-                      (_) => typeof _ === 'string' // last item is an array index
+                      (_) => typeof _ === 'string' // could include last item as an index
                     ),
                     [data.value.data]
                   );

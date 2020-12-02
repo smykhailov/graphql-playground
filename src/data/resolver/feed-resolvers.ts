@@ -19,3 +19,12 @@ export const feedStreamResolver: ResolverFn<
 > = async (_: object, __: object, context: IGraphQLContext) => {
   return await context.feedsStream();
 };
+
+export const scalarsResolver: ResolverFn<
+  number[],
+  object,
+  IGraphQLContext,
+  object
+> = (_: object, __: object, context: IGraphQLContext) => {
+  return context.scalars();
+};

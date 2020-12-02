@@ -3,6 +3,7 @@ import * as faker from 'faker';
 import { sleep } from './utils/sleep';
 
 export interface IGraphQLContext {
+  scalars: () => number[];
   feeds: () => Promise<Feed[]>;
   feedsStream: () => AsyncGenerator<Feed>;
 }
@@ -14,6 +15,14 @@ const createGraphQLContext: () => IGraphQLContext = () => {
 export default createGraphQLContext;
 
 class GraphQLContext implements IGraphQLContext {
+  scalars() {
+    const scalars: number[] = [];
+    for (let i = 1; i <= 100; i++) {
+      scalars.push(i);
+    }
+    return scalars;
+  }
+
   feeds: () => Promise<Feed[]> = async () => {
     if (feedsCache.length > 0) {
       return feedsCache;

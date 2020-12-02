@@ -7,7 +7,11 @@ import {
 import { makeExecutableSchema } from '@graphql-tools/schema';
 
 import { QueryResolvers, Resolvers } from './generated/graphql';
-import { feedResolver, feedStreamResolver } from './resolver/feed-resolvers';
+import {
+  feedResolver,
+  feedStreamResolver,
+  scalarsResolver,
+} from './resolver/feed-resolvers';
 
 import typeDefs from './generated/schema';
 
@@ -31,6 +35,7 @@ export const buildClient: () => ApolloClient<NormalizedCacheObject> = () => {
 };
 
 const queryResolvers: QueryResolvers = {
+  scalars: scalarsResolver,
   feeds: feedResolver,
   feedStream: feedStreamResolver as any, // FIXME: type properly AsyncGeneratorResolver
 };

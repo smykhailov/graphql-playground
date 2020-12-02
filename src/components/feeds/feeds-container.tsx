@@ -1,5 +1,6 @@
 import FeedList from './feeds-list';
 import FeedStream from './feeds-stream';
+import ScalarsList from './scalars-list';
 
 const FeedsContainer = () => {
   return (
@@ -9,6 +10,7 @@ const FeedsContainer = () => {
       <div style={{ display: 'flex' }}>
         {/* <FeedList /> */}
         <FeedStream />
+        {/* <ScalarsList /> */}
       </div>
     </div>
   );
