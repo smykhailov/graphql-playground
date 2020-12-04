@@ -5,7 +5,12 @@ schema {
 type Query {
   feeds: [Feed]
   feedStream: [Feed]
-  scalars: [Int]
+  scalars: [Scalar]
+}
+
+type Scalar {
+  id: ID
+  value: Int
 }
 
 type Feed {

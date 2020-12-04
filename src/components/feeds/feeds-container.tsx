@@ -8,9 +8,9 @@ const FeedsContainer = () => {
       <h2>Feed goes here</h2>
 
       <div style={{ display: 'flex' }}>
-        {/* <FeedList /> */}
         <FeedStream />
-        {/* <ScalarsList /> */}
+        <FeedList />
+        <ScalarsList />
       </div>
     </div>
   );

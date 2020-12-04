@@ -5,10 +5,11 @@ export const cache: InMemoryCache = new InMemoryCache({
     Query: {
       fields: {
         feedStream: {
-          read(value) {
-            console.log('cache value', value);
-            return value;
+          merge(existing = [], incoming: any[]) {
+            return [...existing, ...incoming];
           },
+        },
+        scalars: {
           merge(existing = [], incoming: any[]) {
             return [...existing, ...incoming];
           },

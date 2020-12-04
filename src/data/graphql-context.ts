@@ -1,9 +1,9 @@
-import { Feed } from './generated/graphql';
+import { Feed, Scalar } from './generated/graphql';
 import * as faker from 'faker';
 import { sleep } from './utils/sleep';
 
 export interface IGraphQLContext {
-  scalars: () => number[];
+  scalars: () => AsyncGenerator<Scalar>;
   feeds: () => Promise<Feed[]>;
   feedsStream: () => AsyncGenerator<Feed>;
 }
@@ -12,15 +12,19 @@ const createGraphQLContext: () => IGraphQLContext = () => {
   return new GraphQLContext();
 };
 
+const SLEEP_TIME_IN_MS = 1000;
+
 export default createGraphQLContext;
 
 class GraphQLContext implements IGraphQLContext {
-  scalars() {
-    const scalars: number[] = [];
-    for (let i = 1; i <= 100; i++) {
-      scalars.push(i);
+  async *scalars() {
+    for (let i = 1; i <= 3; i++) {
+      yield {
+        id: `scalar_${i}`,
+        value: i,
+      };
+      await sleep(SLEEP_TIME_IN_MS);
     }
-    return scalars;
   }
 
   feeds: () => Promise<Feed[]> = async () => {
@@ -38,14 +42,19 @@ class GraphQLContext implements IGraphQLContext {
       this.generateFeedData();
     }
 
-    for (let i = 0; i < feedsCache.length; i++) {
+    for (let i = 0; i < feedsCache.length / 2; i++) {
       yield feedsCache[i];
-      await sleep(1000);
+    }
+
+    await sleep(SLEEP_TIME_IN_MS);
+
+    for (let i = feedsCache.length / 2; i < feedsCache.length; i++) {
+      yield feedsCache[i];
     }
   }
 
   private generateFeedData() {
-    for (let i = 1; i <= 100; i++) {
+    for (let i = 1; i <= 6; i++) {
       const feedItem: Feed = {
         id: i.toString(),
         title: faker.random.words(5),

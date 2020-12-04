@@ -16,7 +16,7 @@ const ScalarsList = () => {
       <h3>Scalars List</h3>
       <ul>
         {data?.scalars?.map((item) => {
-          return <li key={item}>{item}</li>;
+          return <li key={item?.id}>{item?.value}</li>;
         })}
       </ul>
     </div>

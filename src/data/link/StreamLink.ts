@@ -1,6 +1,8 @@
 import { FetchResult, Observable, Operation } from '@apollo/client/core';
 import { SchemaLink } from '@apollo/client/link/schema';
+import { sleep } from 'data/utils/sleep';
 import { AsyncExecutionResult, execute, ExecutionPatchResult } from 'graphql';
+import { cloneDeep } from 'lodash';
 import set from 'lodash/set';
 
 export class StreamLink extends SchemaLink {
@@ -13,42 +15,39 @@ export class StreamLink extends SchemaLink {
             : this.context
         )
       )
-        .then((context) =>
-          execute(
+        .then(async (context) => {
+          const result = await execute(
             this.schema,
             operation.query,
             this.rootValue,
             context,
             operation.variables,
             operation.operationName
-          )
-        )
+          );
+          return result;
+        })
         .then(async (result) => {
           if (!observer.closed) {
             if (isAsyncIterable(result)) {
-              while (true) {
-                const data = await result.next();
-                if (data.done) {
-                  break;
-                }
-
-                if (isExecutionPatchResult(data.value) && data.value.path) {
+              await sleep(0);
+              for await (const payload of result) {
+                if (isExecutionPatchResult(payload) && payload.path) {
                   const value = {
                     data: {},
-                    hasNext: data.value.hasNext,
+                    hasNext: payload.hasNext,
                   };
 
                   set(
                     value.data,
-                    data.value.path.filter(
+                    payload.path.filter(
                       (_) => typeof _ === 'string' // could include last item as an index
                     ),
-                    [data.value.data]
+                    [payload.data]
                   );
 
                   observer.next(value);
                 } else {
-                  observer.next({ ...data.value });
+                  observer.next(payload);
                 }
               }
             } else {

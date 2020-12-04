@@ -1,5 +1,8 @@
 import {
   ApolloClient,
+  ApolloLink,
+  from,
+  HttpLink,
   NormalizedCacheObject,
   Resolvers as ApolloResolvers,
 } from '@apollo/client';
@@ -27,17 +30,19 @@ export const buildClient: () => ApolloClient<NormalizedCacheObject> = () => {
 
   return new ApolloClient({
     cache,
-    link: new StreamLink({
-      schema: schema,
-      context: createGraphQLContext(),
-    }),
+    link: from([
+      new StreamLink({
+        schema: schema,
+        context: createGraphQLContext(),
+      }),
+    ]),
   });
 };
 
 const queryResolvers: QueryResolvers = {
-  scalars: scalarsResolver,
   feeds: feedResolver,
   feedStream: feedStreamResolver as any, // FIXME: type properly AsyncGeneratorResolver
+  scalars: scalarsResolver as any, // FIXME: type properly AsyncGeneratorResolver
 };
 
 const buildResolvers: () => ApolloResolvers = () => {

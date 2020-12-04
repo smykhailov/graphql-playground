@@ -1,4 +1,4 @@
-import { Feed, ResolverFn } from 'data/generated/graphql';
+import { Feed, ResolverFn, Scalar } from 'data/generated/graphql';
 import { IGraphQLContext } from 'data/graphql-context';
 
 // TODO: is there simplified way to declare resolver type?
@@ -21,10 +21,10 @@ export const feedStreamResolver: ResolverFn<
 };
 
 export const scalarsResolver: ResolverFn<
-  number[],
+  AsyncGenerator<Scalar>,
   object,
   IGraphQLContext,
   object
-> = (_: object, __: object, context: IGraphQLContext) => {
-  return context.scalars();
+> = async (_: object, __: object, context: IGraphQLContext) => {
+  return await context.scalars();
 };
