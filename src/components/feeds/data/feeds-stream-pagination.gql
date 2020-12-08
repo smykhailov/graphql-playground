@@ -1,0 +1,10 @@
+query feedStreamPagination {
+  feedStreamPagination {
+    feeds @stream(initialCount: 1) {
+      id
+      title
+      description
+    }
+    hasNextPage
+  }
+}

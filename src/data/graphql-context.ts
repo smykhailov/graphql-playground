@@ -1,4 +1,4 @@
-import { Feed, Scalar } from './generated/graphql';
+import { Feed, FeedStreamPagination, Scalar } from './generated/graphql';
 import * as faker from 'faker';
 import { sleep } from './utils/sleep';
 
@@ -6,6 +6,8 @@ export interface IGraphQLContext {
   scalars: () => AsyncGenerator<Scalar>;
   feeds: () => Promise<Feed[]>;
   feedsStream: () => AsyncGenerator<Feed>;
+  feedsStreamPaginationFeeds: () => AsyncGenerator<Feed>;
+  feedStreamPagination: () => FeedStreamPagination;
 }
 
 const createGraphQLContext: () => IGraphQLContext = () => {
@@ -37,6 +39,24 @@ class GraphQLContext implements IGraphQLContext {
     return feedsCache;
   };
 
+  async *feedsStreamPaginationFeeds() {
+    if (feedsCache.length < 1) {
+      this.generateFeedData();
+    }
+
+    for (let i = 0; i < feedsCache.length / 2; i++) {
+      yield feedsCache[i];
+      await sleep(SLEEP_TIME_IN_MS);
+    }
+
+    await sleep(SLEEP_TIME_IN_MS);
+
+    for (let i = feedsCache.length / 2; i < feedsCache.length; i++) {
+      yield feedsCache[i];
+      await sleep(SLEEP_TIME_IN_MS);
+    }
+  }
+
   async *feedsStream() {
     if (feedsCache.length < 1) {
       this.generateFeedData();
@@ -44,13 +64,19 @@ class GraphQLContext implements IGraphQLContext {
 
     for (let i = 0; i < feedsCache.length / 2; i++) {
       yield feedsCache[i];
+      await sleep(SLEEP_TIME_IN_MS);
     }
 
     await sleep(SLEEP_TIME_IN_MS);
 
     for (let i = feedsCache.length / 2; i < feedsCache.length; i++) {
       yield feedsCache[i];
+      await sleep(SLEEP_TIME_IN_MS);
     }
+  }
+
+  feedStreamPagination() {
+    return { hasNextPage: Math.random() < 0.5 };
   }
 
   private generateFeedData() {

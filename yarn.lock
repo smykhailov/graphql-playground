@@ -2440,6 +2440,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/set-value@^2.0.0":
+  version "2.0.0"
+  resolved "https://domoreexp.pkgs.visualstudio.com/_packaging/npm-mirror/npm/registry/@types/set-value/-/set-value-2.0.0.tgz#63d386b103926dcf49b50e16e0f6dd49983046be"
+  integrity sha1-Y9OGsQOSbc9JtQ4W4PbdSZgwRr4=
+
 "@types/source-list-map@*":
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/@types/source-list-map/-/source-list-map-0.1.2.tgz#0078836063ffaf17412349bba364087e0ac02ec9"

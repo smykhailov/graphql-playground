@@ -71,6 +71,7 @@
     "@types/node": "^14.14.10",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "@types/set-value": "^2.0.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-css-modules": "^2.11.0",
     "eslint-plugin-prettier": "^3.1.4",

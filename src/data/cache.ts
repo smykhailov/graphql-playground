@@ -1,17 +1,14 @@
 import { InMemoryCache } from '@apollo/client';
+import { Feed } from './generated/graphql';
 
 export const cache: InMemoryCache = new InMemoryCache({
   typePolicies: {
-    Query: {
+    FeedStreamPagination: {
       fields: {
-        feedStream: {
-          merge(existing = [], incoming: any[]) {
-            return [...existing, ...incoming];
-          },
-        },
-        scalars: {
-          merge(existing = [], incoming: any[]) {
-            return [...existing, ...incoming];
+        feeds: {
+          keyArgs: false,
+          merge(existing = [], incomingItems: Array<Feed>) {
+            return [...existing, ...incomingItems];
           },
         },
       },
