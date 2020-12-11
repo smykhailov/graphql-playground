@@ -20,10 +20,11 @@ export default createGraphQLContext;
 
 class GraphQLContext implements IGraphQLContext {
   async *scalars() {
-    for (let i = 1; i <= 3; i++) {
+    for (let i = 1; i <= 2; i++) {
+      const value = Math.floor(Math.random() * 10);
       yield {
-        id: `scalar_${i}`,
-        value: i,
+        id: `${i}:scalar_${Math.random()}`,
+        value,
       };
       await sleep(SLEEP_TIME_IN_MS);
     }

@@ -9,9 +9,9 @@ const FeedsContainer = () => {
       <h2>Feed goes here</h2>
 
       <div style={{ display: 'flex' }}>
-        <FeedStream />
+        {/* <FeedStream /> */}
         <FeedList />
-        <FeedPagination />
+        {/* <FeedPagination /> */}
         <ScalarsList />
       </div>
     </div>

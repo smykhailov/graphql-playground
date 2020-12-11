@@ -5,8 +5,10 @@ import {
   Operation,
 } from '@apollo/client/core';
 import { SchemaLink } from '@apollo/client/link/schema';
+import { sleep } from 'data/utils/sleep';
 
 import { AsyncExecutionResult, execute, ExecutionPatchResult } from 'graphql';
+import { cloneDeep } from 'lodash';
 
 export class StreamLink extends SchemaLink {
   public request(operation: Operation): Observable<FetchResult> {
@@ -36,12 +38,24 @@ export class StreamLink extends SchemaLink {
               for await (const payload of result) {
                 if (isExecutionPatchResult(payload) && payload.path) {
                   const path = [...payload.path!];
-                  cache.modify({
-                    fields: generateCacheModifyStrategy(path, {
-                      ...payload.data,
-                    }),
-                  });
+
+                  const data = generateEmbeddedPatchByPath(
+                    { scalars: [] },
+                    cloneDeep(payload.data),
+                    path.slice(0, -1) as string[]
+                  );
+
+                  observer.next({ data });
+
+                  // const fields = generateCacheModifyStrategy(path, {
+                  //   ...payload.data,
+                  // });
+                  // console.log('fields', fields);
+                  // cache.modify({
+                  //   fields,
+                  // });
                 } else if (payload.data) {
+                  console.log('payload', payload);
                   observer.next(payload);
                 }
               }
