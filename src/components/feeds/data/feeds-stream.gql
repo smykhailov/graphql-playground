@@ -1,7 +1,0 @@
-query feedStream {
-  feedStream {
-    id
-    title
-    description
-  }
-}

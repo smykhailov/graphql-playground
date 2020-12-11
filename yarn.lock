@@ -2269,6 +2269,11 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/deep-freeze@^0.1.2":
+  version "0.1.2"
+  resolved "https://domoreexp.pkgs.visualstudio.com/_packaging/npm-mirror/npm/registry/@types/deep-freeze/-/deep-freeze-0.1.2.tgz#68e5379291910e82c2f0d1629732163c2aa662cc"
+  integrity sha1-aOU3kpGRDoLC8NFilzIWPCqmYsw=
+
 "@types/eslint@^7.2.4":
   version "7.2.5"
   resolved "https://registry.yarnpkg.com/@types/eslint/-/eslint-7.2.5.tgz#92172ecf490c2fce4b076739693d75f30376d610"
@@ -2373,6 +2378,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/lodash@^4.14.165":
+  version "4.14.165"
+  resolved "https://domoreexp.pkgs.visualstudio.com/_packaging/npm-mirror/npm/registry/@types/lodash/-/lodash-4.14.165.tgz#74d55d947452e2de0742bad65270433b63a8c30f"
+  integrity sha1-dNVdlHRS4t4HQrrWUnBDO2Ooww8=
+
 "@types/minimatch@*":
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
@@ -2434,6 +2444,11 @@
   integrity sha512-auApPaJf3NPfe18hSoJkp8EbZzer2ISk7o8mCC3M9he/a04+gbMF97NkpD2S8riMGvm4BMRI59/SZQSaLTKpsQ==
   dependencies:
     "@types/node" "*"
+
+"@types/set-value@^2.0.0":
+  version "2.0.0"
+  resolved "https://domoreexp.pkgs.visualstudio.com/_packaging/npm-mirror/npm/registry/@types/set-value/-/set-value-2.0.0.tgz#63d386b103926dcf49b50e16e0f6dd49983046be"
+  integrity sha1-Y9OGsQOSbc9JtQ4W4PbdSZgwRr4=
 
 "@types/source-list-map@*":
   version "0.1.2"
@@ -2768,6 +2783,13 @@
   dependencies:
     tslib "^1.9.3"
 
+"@wry/equality@^0.1.2":
+  version "0.1.11"
+  resolved "https://domoreexp.pkgs.visualstudio.com/_packaging/npm-mirror/npm/registry/@wry/equality/-/equality-0.1.11.tgz#35cb156e4a96695aa81a9ecc4d03787bc17f1790"
+  integrity sha1-NcsVbkqWaVqoGp7MTQN4e8F/F5A=
+  dependencies:
+    tslib "^1.9.3"
+
 "@wry/equality@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@wry/equality/-/equality-0.2.0.tgz#a312d1b6a682d0909904c2bcd355b02303104fb7"
@@ -2966,6 +2988,24 @@ anymatch@^3.0.3, anymatch@~3.1.1:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
+apollo-link-state@^0.4.2:
+  version "0.4.2"
+  resolved "https://domoreexp.pkgs.visualstudio.com/_packaging/npm-mirror/npm/registry/apollo-link-state/-/apollo-link-state-0.4.2.tgz#ac00e9be9b0ca89eae0be6ba31fe904b80bbe2e8"
+  integrity sha1-rADpvpsMqJ6uC+a6Mf6QS4C74ug=
+  dependencies:
+    apollo-utilities "^1.0.8"
+    graphql-anywhere "^4.1.0-alpha.0"
+
+apollo-link@^1.2.14:
+  version "1.2.14"
+  resolved "https://domoreexp.pkgs.visualstudio.com/_packaging/npm-mirror/npm/registry/apollo-link/-/apollo-link-1.2.14.tgz#3feda4b47f9ebba7f4160bef8b977ba725b684d9"
+  integrity sha1-P+2ktH+eu6f0Fgvvi5d7pyW2hNk=
+  dependencies:
+    apollo-utilities "^1.3.0"
+    ts-invariant "^0.4.0"
+    tslib "^1.9.3"
+    zen-observable-ts "^0.8.21"
+
 apollo-upload-client@14.1.2:
   version "14.1.2"
   resolved "https://registry.yarnpkg.com/apollo-upload-client/-/apollo-upload-client-14.1.2.tgz#7a72b000f1cd67eaf8f12b4bda2796d0898c0dae"
@@ -2974,6 +3014,16 @@ apollo-upload-client@14.1.2:
     "@apollo/client" "^3.1.5"
     "@babel/runtime" "^7.11.2"
     extract-files "^9.0.0"
+
+apollo-utilities@^1.0.8, apollo-utilities@^1.3.0, apollo-utilities@^1.3.4:
+  version "1.3.4"
+  resolved "https://domoreexp.pkgs.visualstudio.com/_packaging/npm-mirror/npm/registry/apollo-utilities/-/apollo-utilities-1.3.4.tgz#6129e438e8be201b6c55b0f13ce49d2c7175c9cf"
+  integrity sha1-YSnkOOi+IBtsVbDxPOSdLHF1yc8=
+  dependencies:
+    "@wry/equality" "^0.1.2"
+    fast-json-stable-stringify "^2.0.0"
+    ts-invariant "^0.4.0"
+    tslib "^1.10.0"
 
 aproba@^1.1.1:
   version "1.2.0"
@@ -4829,6 +4879,11 @@ deep-extend@^0.6.0:
   resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.6.0.tgz#c4fa7c95404a17a9c3e8ca7e1537312b736330ac"
   integrity sha512-LOHxIOaPYdHlJRtCQfDIVZtfw/ufM8+rVj649RIHzcm/vGwQRXFt6OPqIFWsm2XEMrNIEtWR64sY1LEKD2vAOA==
 
+deep-freeze@^0.0.1:
+  version "0.0.1"
+  resolved "https://domoreexp.pkgs.visualstudio.com/_packaging/npm-mirror/npm/registry/deep-freeze/-/deep-freeze-0.0.1.tgz#3a0b0005de18672819dfd38cd31f91179c893e84"
+  integrity sha1-OgsABd4YZygZ39OM0x+RF5yJPoQ=
+
 deep-is@^0.1.3, deep-is@~0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/deep-is/-/deep-is-0.1.3.tgz#b369d6fb5dbc13eecf524f91b070feedc357cf34"
@@ -6382,6 +6437,15 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
   integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
 
+graphql-anywhere@^4.1.0-alpha.0:
+  version "4.2.7"
+  resolved "https://domoreexp.pkgs.visualstudio.com/_packaging/npm-mirror/npm/registry/graphql-anywhere/-/graphql-anywhere-4.2.7.tgz#c06fb40b1d62b39470c80e3731478dbbef060067"
+  integrity sha1-wG+0Cx1is5RwyA43MUeNu+8GAGc=
+  dependencies:
+    apollo-utilities "^1.3.4"
+    ts-invariant "^0.3.2"
+    tslib "^1.10.0"
+
 graphql-config@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-3.2.0.tgz#3ec3a7e319792086b80e54db4b37372ad4a79a32"
@@ -6445,10 +6509,10 @@ graphql-tools@^7.0.2:
     "@graphql-tools/wrap" "^7.0.0"
     tslib "~2.0.1"
 
-graphql@^15.4.0-experimental-stream-defer.1:
-  version "15.4.0"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.4.0.tgz#e459dea1150da5a106486ba7276518b5295a4347"
-  integrity sha512-EB3zgGchcabbsU9cFe1j+yxdzKQKAbGUWRb13DsrsMN1yyfmmIq+2+L5MqVWcDCE4V89R5AyUOi7sMOGxdsYtA==
+graphql@15.4.0-experimental-stream-defer.1:
+  version "15.4.0-experimental-stream-defer.1"
+  resolved "https://domoreexp.pkgs.visualstudio.com/_packaging/npm-mirror/npm/registry/graphql/-/graphql-15.4.0-experimental-stream-defer.1.tgz#46ae3fd2b532284575e7ddcf6c4f08aa7fe53fa3"
+  integrity sha1-Rq4/0rUyKEV1593PbE8Iqn/lP6M=
 
 growly@^1.3.0:
   version "1.3.0"
@@ -11416,6 +11480,13 @@ set-value@^2.0.0, set-value@^2.0.1:
     is-plain-object "^2.0.3"
     split-string "^3.0.1"
 
+set-value@^3.0.2:
+  version "3.0.2"
+  resolved "https://domoreexp.pkgs.visualstudio.com/_packaging/npm-mirror/npm/registry/set-value/-/set-value-3.0.2.tgz#74e8ecd023c33d0f77199d415409a40f21e61b90"
+  integrity sha1-dOjs0CPDPQ93GZ1BVAmkDyHmG5A=
+  dependencies:
+    is-plain-object "^2.0.4"
+
 setimmediate@^1.0.4, setimmediate@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/setimmediate/-/setimmediate-1.0.5.tgz#290cbb232e306942d7d7ea9b83732ab7856f8285"
@@ -12331,6 +12402,20 @@ tryer@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/tryer/-/tryer-1.0.1.tgz#f2c85406800b9b0f74c9f7465b81eaad241252f8"
   integrity sha512-c3zayb8/kWWpycWYg87P71E1S1ZL6b6IJxfb5fvsUgsf0S2MVGaDhDXXjDMpdCpfWXqptc+4mXwmiy1ypXqRAA==
+
+ts-invariant@^0.3.2:
+  version "0.3.3"
+  resolved "https://domoreexp.pkgs.visualstudio.com/_packaging/npm-mirror/npm/registry/ts-invariant/-/ts-invariant-0.3.3.tgz#b5742b1885ecf9e29c31a750307480f045ec0b16"
+  integrity sha1-tXQrGIXs+eKcMadQMHSA8EXsCxY=
+  dependencies:
+    tslib "^1.9.3"
+
+ts-invariant@^0.4.0:
+  version "0.4.4"
+  resolved "https://domoreexp.pkgs.visualstudio.com/_packaging/npm-mirror/npm/registry/ts-invariant/-/ts-invariant-0.4.4.tgz#97a523518688f93aafad01b0e80eb803eb2abd86"
+  integrity sha1-l6UjUYaI+TqvrQGw6A64A+sqvYY=
+  dependencies:
+    tslib "^1.9.3"
 
 ts-invariant@^0.5.0:
   version "0.5.1"
@@ -13390,7 +13475,15 @@ yn@3.1.1:
   resolved "https://registry.yarnpkg.com/yn/-/yn-3.1.1.tgz#1e87401a09d767c1d5eab26a6e4c185182d2eb50"
   integrity sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==
 
-zen-observable@^0.8.14:
+zen-observable-ts@^0.8.21:
+  version "0.8.21"
+  resolved "https://domoreexp.pkgs.visualstudio.com/_packaging/npm-mirror/npm/registry/zen-observable-ts/-/zen-observable-ts-0.8.21.tgz#85d0031fbbde1eba3cd07d3ba90da241215f421d"
+  integrity sha1-hdADH7veHro80H07qQ2iQSFfQh0=
+  dependencies:
+    tslib "^1.9.3"
+    zen-observable "^0.8.0"
+
+zen-observable@^0.8.0, zen-observable@^0.8.14:
   version "0.8.15"
   resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.8.15.tgz#96415c512d8e3ffd920afd3889604e30b9eaac15"
   integrity sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==
