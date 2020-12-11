@@ -3,6 +3,7 @@ import { SchemaLink } from '@apollo/client/link/schema';
 
 import { AsyncExecutionResult, execute, ExecutionPatchResult } from 'graphql';
 import { cloneDeep, first } from 'lodash';
+import deepFreeze from 'deep-freeze';
 
 export class StreamLink extends SchemaLink {
   public request(operation: Operation): Observable<FetchResult> {
@@ -30,6 +31,7 @@ export class StreamLink extends SchemaLink {
           if (!observer.closed) {
             if (isAsyncIterable(result)) {
               for await (const payload of result) {
+                // console.log('payload', cloneDeep(Object.freeze(payload)));
                 if (isExecutionPatchResult(payload) && payload.path) {
                   const path = [...payload.path!];
 
@@ -39,8 +41,12 @@ export class StreamLink extends SchemaLink {
                     path.slice(0, -1) as string[]
                   );
 
-                  observer.next({ data });
+                  const patch = { data };
+                  console.log('payload', payload);
+                  // debugger;
+                  observer.next(patch);
                 } else if (payload.data) {
+                  console.log('payload', payload);
                   observer.next(payload);
                 }
               }

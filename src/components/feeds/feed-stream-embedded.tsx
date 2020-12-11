@@ -41,12 +41,12 @@ const FeedStreamEmbeddedComponent = () => {
 
   return (
     <div>
-      <h3>Feed Stream Embedded</h3>
-      <ul>
+      <h3>Feed Stream Embedded (6 items in total)</h3>
+      <ol>
         {data?.feedStreamEmbedded?.feedStream?.map((item) => {
           return <li key={item?.id}>{item?.title}</li>;
         })}
-      </ul>
+      </ol>
     </div>
   );
 };

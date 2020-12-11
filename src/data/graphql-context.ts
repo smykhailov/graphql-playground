@@ -48,7 +48,7 @@ class GraphQLContext implements IGraphQLContext {
       this.generateFeedData();
     }
 
-    for (let i = 0; i < feedsCache.length / 2; i++) {
+    for (let i = 0; i < feedsCache.length; i++) {
       yield feedsCache[i];
       await sleep(SLEEP_TIME_IN_MS);
     }

@@ -33,8 +33,8 @@ const ArticlesList = () => {
 
   return (
     <div>
-      <h3>Articles List</h3>
-      <ul>
+      <h3>Articles List (8 items in total)</h3>
+      <ol>
         {data?.articles.map((item) => {
           return (
             <li key={item.id}>
@@ -42,7 +42,7 @@ const ArticlesList = () => {
             </li>
           );
         })}
-      </ul>
+      </ol>
     </div>
   );
 };

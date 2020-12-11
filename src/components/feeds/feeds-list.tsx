@@ -27,12 +27,12 @@ const FeedList = () => {
 
   return (
     <div>
-      <h3>Feeds List</h3>
-      <ul>
+      <h3>Feeds List (6 items in total)</h3>
+      <ol>
         {data?.feeds.map((item) => {
           return <li key={item.id}>{item.title}</li>;
         })}
-      </ul>
+      </ol>
     </div>
   );
 };

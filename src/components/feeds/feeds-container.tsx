@@ -5,15 +5,20 @@ import FeedStreamEmbedded from './feed-stream-embedded';
 
 const FeedsContainer = () => {
   return (
-    <div>
-      <h2>Feed goes here</h2>
+    <div style={{ display: 'flex' }}>
+      {/* 👎 Try to render more than one component and you will see that the rest do not work */}
 
-      <div style={{ display: 'flex' }}>
-        {/* <FeedStream /> */}
-        {/* <FeedList /> */}
-        <FeedStreamEmbedded />
-        {/* <ArticlesList /> */}
-      </div>
+      {/* 👍 Works alone */}
+      {/* <FeedStream /> */}
+
+      {/* 👍 Works alone */}
+      <FeedList />
+
+      {/* 👎 Does not work alone */}
+      {/* <FeedStreamEmbedded /> */}
+
+      {/* 👍 Works alone */}
+      {/* <ArticlesList /> */}
     </div>
   );
 };

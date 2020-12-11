@@ -28,12 +28,12 @@ const FeedStream = () => {
 
   return (
     <div>
-      <h3>Feeds Stream</h3>
-      <ul>
+      <h3>Feeds Stream (6 items in total)</h3>
+      <ol>
         {data?.feedStream.map((item) => {
           return <li key={item.id}>{item.title}</li>;
         })}
-      </ul>
+      </ol>
     </div>
   );
 };
