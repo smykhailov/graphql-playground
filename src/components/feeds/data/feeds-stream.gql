@@ -1,7 +1,0 @@
-query feedStream {
-  feedStream @stream(initialCount: 1) {
-    id
-    title
-    description
-  }
-}

@@ -1,7 +1,7 @@
 import FeedList from './feeds-list';
-import FeedStream from './feeds-stream';
-import ScalarsList from './scalars-list';
-import FeedPagination from './feed-pagination';
+import FeedStream from './feed-stream';
+import ArticlesList from './articles-list';
+import FeedStreamEmbedded from './feed-stream-embedded';
 
 const FeedsContainer = () => {
   return (
@@ -10,9 +10,9 @@ const FeedsContainer = () => {
 
       <div style={{ display: 'flex' }}>
         {/* <FeedStream /> */}
-        <FeedList />
-        {/* <FeedPagination /> */}
-        <ScalarsList />
+        {/* <FeedList /> */}
+        <FeedStreamEmbedded />
+        {/* <ArticlesList /> */}
       </div>
     </div>
   );

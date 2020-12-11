@@ -1,14 +1,8 @@
-import {
-  FetchResult,
-  InMemoryCache,
-  Observable,
-  Operation,
-} from '@apollo/client/core';
+import { FetchResult, Observable, Operation } from '@apollo/client/core';
 import { SchemaLink } from '@apollo/client/link/schema';
-import { sleep } from 'data/utils/sleep';
 
 import { AsyncExecutionResult, execute, ExecutionPatchResult } from 'graphql';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, first } from 'lodash';
 
 export class StreamLink extends SchemaLink {
   public request(operation: Operation): Observable<FetchResult> {
@@ -32,7 +26,7 @@ export class StreamLink extends SchemaLink {
           return result;
         })
         .then(async (result) => {
-          const cache = operation.getContext().cache as InMemoryCache;
+          // const cache = operation.getContext().cache as InMemoryCache;
           if (!observer.closed) {
             if (isAsyncIterable(result)) {
               for await (const payload of result) {
@@ -40,22 +34,13 @@ export class StreamLink extends SchemaLink {
                   const path = [...payload.path!];
 
                   const data = generateEmbeddedPatchByPath(
-                    { scalars: [] },
+                    {},
                     cloneDeep(payload.data),
                     path.slice(0, -1) as string[]
                   );
 
                   observer.next({ data });
-
-                  // const fields = generateCacheModifyStrategy(path, {
-                  //   ...payload.data,
-                  // });
-                  // console.log('fields', fields);
-                  // cache.modify({
-                  //   fields,
-                  // });
                 } else if (payload.data) {
-                  console.log('payload', payload);
                   observer.next(payload);
                 }
               }
@@ -75,21 +60,6 @@ export class StreamLink extends SchemaLink {
   }
 }
 
-const generateCacheModifyStrategy = (
-  path: Array<string | number>,
-  data: any
-) => {
-  const rootFieldName = path[0];
-  const pathWithoutIndex = path.slice(1, -1) as string[]; // remove first and the last item (bcz it is an index)
-  return {
-    [rootFieldName](existing: any) {
-      return pathWithoutIndex.length === 0
-        ? [...existing, data]
-        : generateEmbeddedPatchByPath(existing, data, pathWithoutIndex);
-    },
-  };
-};
-
 interface EmbeddedPatch {
   [key: string]: EmbeddedPatch | EmbeddedArrayPatch;
 }
@@ -97,19 +67,19 @@ interface EmbeddedPatch {
 type EmbeddedArrayPatch = any[];
 
 const generateEmbeddedPatchByPath = (
-  existing: any,
+  existing: Record<string, any>,
   data: any,
   path: string[]
 ): EmbeddedPatch => {
   return path.length === 1
     ? {
         ...existing,
-        [path[0]]: [...existing[path[0]], data],
+        [first(path)!]: [...(existing[first(path)!] ?? []), data],
       }
     : {
         ...existing,
-        [path[0]]: generateEmbeddedPatchByPath(
-          existing[path[0]],
+        [first(path)!]: generateEmbeddedPatchByPath(
+          existing[first(path)!] ?? {},
           data,
           path.slice(1)
         ),

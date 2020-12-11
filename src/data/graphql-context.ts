@@ -1,13 +1,16 @@
-import { Feed, FeedStreamPagination, Scalar } from './generated/graphql';
+import { Article } from 'components/feeds/articles-list';
+import {
+  Feed,
+  FeedStreamEmbedded,
+} from 'components/feeds/feed-stream-embedded';
 import * as faker from 'faker';
 import { sleep } from './utils/sleep';
 
 export interface IGraphQLContext {
-  scalars: () => AsyncGenerator<Scalar>;
+  articles: () => AsyncGenerator<Article>;
   feeds: () => Promise<Feed[]>;
   feedsStream: () => AsyncGenerator<Feed>;
-  feedsStreamPaginationFeeds: () => AsyncGenerator<Feed>;
-  feedStreamPagination: () => FeedStreamPagination;
+  feedStreamEmbedded: () => Partial<FeedStreamEmbedded>;
 }
 
 const createGraphQLContext: () => IGraphQLContext = () => {
@@ -19,12 +22,12 @@ const SLEEP_TIME_IN_MS = 1000;
 export default createGraphQLContext;
 
 class GraphQLContext implements IGraphQLContext {
-  async *scalars() {
-    for (let i = 1; i <= 2; i++) {
-      const value = Math.floor(Math.random() * 10);
+  async *articles() {
+    for (let i = 1; i <= 8; i++) {
       yield {
-        id: `${i}:scalar_${Math.random()}`,
-        value,
+        id: i.toString(),
+        title: faker.random.words(5),
+        author: faker.random.words(2),
       };
       await sleep(SLEEP_TIME_IN_MS);
     }
@@ -40,24 +43,6 @@ class GraphQLContext implements IGraphQLContext {
     return feedsCache;
   };
 
-  async *feedsStreamPaginationFeeds() {
-    if (feedsCache.length < 1) {
-      this.generateFeedData();
-    }
-
-    for (let i = 0; i < feedsCache.length / 2; i++) {
-      yield feedsCache[i];
-      await sleep(SLEEP_TIME_IN_MS);
-    }
-
-    await sleep(SLEEP_TIME_IN_MS);
-
-    for (let i = feedsCache.length / 2; i < feedsCache.length; i++) {
-      yield feedsCache[i];
-      await sleep(SLEEP_TIME_IN_MS);
-    }
-  }
-
   async *feedsStream() {
     if (feedsCache.length < 1) {
       this.generateFeedData();
@@ -67,16 +52,9 @@ class GraphQLContext implements IGraphQLContext {
       yield feedsCache[i];
       await sleep(SLEEP_TIME_IN_MS);
     }
-
-    await sleep(SLEEP_TIME_IN_MS);
-
-    for (let i = feedsCache.length / 2; i < feedsCache.length; i++) {
-      yield feedsCache[i];
-      await sleep(SLEEP_TIME_IN_MS);
-    }
   }
 
-  feedStreamPagination() {
+  feedStreamEmbedded() {
     return { hasNextPage: Math.random() < 0.5 };
   }
 

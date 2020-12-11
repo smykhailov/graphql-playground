@@ -1,6 +1,0 @@
-query scalars {
-  scalars @stream(initialCount: 1) {
-    id
-    value
-  }
-}

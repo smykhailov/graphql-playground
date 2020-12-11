@@ -1,7 +1,0 @@
-query feeds {
-  feeds {
-    id
-    title
-    description
-  }
-}

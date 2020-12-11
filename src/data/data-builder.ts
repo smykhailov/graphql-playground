@@ -7,24 +7,21 @@ import {
 
 import { makeExecutableSchema } from '@graphql-tools/schema';
 
-import { QueryResolvers, Resolvers } from './generated/graphql';
 import {
   feedResolver,
-  feedStreamPaginationResolver,
   feedStreamResolver,
-  scalarsResolver,
-  feedStreamPaginationFeedsResolver,
+  articlesResolver,
+  feedStreamEmbeddedResolver,
 } from './resolver/feed-resolvers';
-
-import typeDefs from './generated/schema';
 
 import createGraphQLContext, { IGraphQLContext } from './graphql-context';
 import { StreamLink } from './link/StreamLink';
 import { cache } from './cache';
+import typeDefs from './typeDefs';
 
 export const buildClient: () => ApolloClient<NormalizedCacheObject> = () => {
   const schema = makeExecutableSchema<IGraphQLContext>({
-    typeDefs: typeDefs,
+    typeDefs,
     resolvers: buildResolvers(),
   });
 
@@ -39,21 +36,20 @@ export const buildClient: () => ApolloClient<NormalizedCacheObject> = () => {
   });
 };
 
-const queryResolvers: QueryResolvers = {
+const queryResolvers = {
   feeds: feedResolver,
-  feedStream: feedStreamResolver as any, // FIXME: type properly AsyncGeneratorResolver
-  scalars: scalarsResolver as any, // FIXME: type properly AsyncGeneratorResolver
-  feedStreamPagination: feedStreamPaginationResolver,
+  feedStream: feedStreamResolver,
+  articles: articlesResolver,
+  feedStreamEmbedded: feedStreamEmbeddedResolver,
 };
 
 const buildResolvers: () => ApolloResolvers = () => {
-  const resolvers: Resolvers = {
+  const resolvers = {
     Query: queryResolvers,
-    FeedStreamPagination: {
-      feeds: feedStreamPaginationFeedsResolver as any, // FIXME: type properly AsyncGeneratorResolver
+    FeedStreamEmbedded: {
+      feedStream: feedStreamResolver,
     },
   };
 
-  // TODO: is it possible to make resolvers compatible with ApolloClient resolvers?
   return resolvers as ApolloResolvers;
 };
