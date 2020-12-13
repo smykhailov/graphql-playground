@@ -36,7 +36,9 @@ export class StreamLink extends SchemaLink {
                   const path = [...payload.path!];
 
                   const data = generateEmbeddedPatchByPath(
-                    {},
+                    {
+                      feedStreamEmbedded: { __typename: 'FeedStreamEmbedded' },
+                    },
                     cloneDeep(payload.data),
                     path.slice(0, -1) as string[]
                   );

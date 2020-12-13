@@ -17,7 +17,6 @@ export const cache: InMemoryCache = new InMemoryCache({
           },
         },
         feedStreamEmbedded: {
-          keyArgs: false,
           merge: true,
         },
       },
