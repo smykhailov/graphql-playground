@@ -2,7 +2,7 @@ import { FetchResult, Observable, Operation } from '@apollo/client/core';
 import { SchemaLink } from '@apollo/client/link/schema';
 
 import { AsyncExecutionResult, execute, ExecutionPatchResult } from 'graphql';
-import { cloneDeep, first } from 'lodash';
+import { cloneDeep, first, get } from 'lodash';
 import deepFreeze from 'deep-freeze';
 
 export class StreamLink extends SchemaLink {
@@ -30,25 +30,28 @@ export class StreamLink extends SchemaLink {
           // const cache = operation.getContext().cache as InMemoryCache;
           if (!observer.closed) {
             if (isAsyncIterable(result)) {
+              let rootTypenameCache: any = {};
               for await (const payload of result) {
                 // console.log('payload', cloneDeep(Object.freeze(payload)));
                 if (isExecutionPatchResult(payload) && payload.path) {
+                  const data = cloneDeep(payload.data);
                   const path = [...payload.path!];
 
-                  const data = generateEmbeddedPatchByPath(
-                    {
-                      feedStreamEmbedded: { __typename: 'FeedStreamEmbedded' },
-                    },
-                    cloneDeep(payload.data),
-                    path.slice(0, -1) as string[]
-                  );
+                  const patch = {
+                    data: generateEmbeddedPatchByPath(
+                      {},
+                      data,
+                      path.slice(0, -1) as string[],
+                      rootTypenameCache
+                    ),
+                  };
 
-                  const patch = { data };
-                  console.log('payload', payload);
-                  // debugger;
                   observer.next(patch);
                 } else if (payload.data) {
-                  console.log('payload', payload);
+                  rootTypenameCache = normalizeObjectIntoCacheBy(
+                    payload.data,
+                    '__typename'
+                  );
                   observer.next(payload);
                 }
               }
@@ -69,7 +72,7 @@ export class StreamLink extends SchemaLink {
 }
 
 interface EmbeddedPatch {
-  [key: string]: EmbeddedPatch | EmbeddedArrayPatch;
+  [key: string]: EmbeddedPatch | EmbeddedArrayPatch | string;
 }
 
 type EmbeddedArrayPatch = any[];
@@ -77,20 +80,26 @@ type EmbeddedArrayPatch = any[];
 const generateEmbeddedPatchByPath = (
   existing: Record<string, any>,
   data: any,
-  path: string[]
+  path: string[],
+  rootTypenameCache: Record<string, string>
 ): EmbeddedPatch => {
+  const firstElement = first(path)!;
   return path.length === 1
     ? {
         ...existing,
-        [first(path)!]: [...(existing[first(path)!] ?? []), data],
+        [firstElement]: [...(existing[firstElement] ?? []), data],
       }
     : {
         ...existing,
-        [first(path)!]: generateEmbeddedPatchByPath(
-          existing[first(path)!] ?? {},
-          data,
-          path.slice(1)
-        ),
+        [firstElement]: {
+          __typename: rootTypenameCache[firstElement],
+          ...generateEmbeddedPatchByPath(
+            existing[firstElement] ?? {},
+            data,
+            path.slice(1),
+            rootTypenameCache
+          ),
+        },
       };
 };
 
@@ -104,4 +113,22 @@ const isExecutionPatchResult = (
   asyncExecutionResulst: AsyncExecutionResult
 ): asyncExecutionResulst is ExecutionPatchResult => {
   return !!(asyncExecutionResulst as ExecutionPatchResult).path;
+};
+
+const normalizeObjectIntoCacheBy = (
+  data: Record<string, any>,
+  propName: string
+): Record<string, string> => {
+  let cache: Record<string, string> = {};
+  Object.entries(data).forEach(([key, value]) => {
+    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+      if (value[propName]) {
+        cache[key] = value[propName];
+      }
+      const embeddedCache = normalizeObjectIntoCacheBy(value, propName);
+      cache = { ...embeddedCache, ...cache };
+    }
+  });
+
+  return cache;
 };

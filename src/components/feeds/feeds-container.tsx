@@ -12,10 +12,10 @@ const FeedsContainer = () => {
       {/* <FeedStream /> */}
 
       {/* 👍 Works alone */}
-      <FeedList />
+      {/* <FeedList /> */}
 
       {/* 👎 Does not work alone */}
-      {/* <FeedStreamEmbedded /> */}
+      <FeedStreamEmbedded />
 
       {/* 👍 Works alone */}
       {/* <ArticlesList /> */}
