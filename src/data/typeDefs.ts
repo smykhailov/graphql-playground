@@ -61,7 +61,7 @@ type Articles implements Connection {
 type Query {
   feeds: Feeds
   feedsStream(first: Int, after: String) : FeedsStream
-  articles: Articles
+  articles(first: Int, after: String): Articles
 }
 `;
 

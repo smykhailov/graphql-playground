@@ -1,9 +1,11 @@
 import { gql, useQuery } from '@apollo/client';
+import { ARTICLES_NUMBER } from 'data/graphql-context';
+import { useCallback } from 'react';
 import { IConnection, IEdge, INode } from './feeds-stream-list';
 
 const QUERY = gql`
-  query articles {
-    articles {
+  query articles($first: Int, $after: String) {
+    articles(first: $first, after: $after) {
       edges {
         node {
           id
@@ -28,7 +30,19 @@ interface QueryResult {
 }
 
 const ArticlesList = () => {
-  const { data, loading, error } = useQuery<QueryResult>(QUERY);
+  const { data, loading, error, refetch } = useQuery<QueryResult>(QUERY, {
+    variables: {
+      first: ARTICLES_NUMBER,
+    },
+    partialRefetch: true,
+    notifyOnNetworkStatusChange: true,
+  });
+
+  const handleLoadMore = useCallback(() => {
+    refetch({
+      first: ARTICLES_NUMBER,
+    });
+  }, [refetch]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -41,6 +55,7 @@ const ArticlesList = () => {
   return (
     <div>
       <h3>Articles List (CDL Implementation)</h3>
+      <button onClick={handleLoadMore}>Loadmore</button>
       <ol>
         {data?.articles?.edges?.map(({ node }) => {
           return (
