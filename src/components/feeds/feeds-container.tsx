@@ -1,24 +1,13 @@
-import FeedList from './feeds-list';
-import FeedStream from './feed-stream';
+import FeedsList from './feeds-list';
 import ArticlesList from './articles-list';
-import FeedStreamEmbedded from './feed-stream-embedded';
+import FeedsStreamList from './feeds-stream-list';
 
 const FeedsContainer = () => {
   return (
     <div style={{ display: 'flex' }}>
-      {/* 👎 Try to render more than one component and you will see that the rest do not work */}
-
-      {/* 👍 Works alone */}
-      {/* <FeedStream /> */}
-
-      {/* 👍 Works alone */}
-      {/* <FeedList /> */}
-
-      {/* 👎 Does not work alone */}
-      <FeedStreamEmbedded />
-
-      {/* 👍 Works alone */}
-      {/* <ArticlesList /> */}
+      <FeedsList />
+      <FeedsStreamList />
+      <ArticlesList />
     </div>
   );
 };

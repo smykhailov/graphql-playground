@@ -1,23 +1,30 @@
 import { gql, useQuery } from '@apollo/client';
+import { IConnection, IEdge, INode } from './feeds-stream-list';
 
 const QUERY = gql`
   query articles {
-    articles @stream(initialCount: 1) {
-      id
-      title
-      author
+    articles {
+      edges {
+        node {
+          id
+          title
+          author
+        }
+      }
     }
   }
 `;
-
-export interface Article {
-  id: string;
+export interface IArticleNode extends INode {
   title: string;
   author: string;
 }
 
+export type IArticleEdge = IEdge<IArticleNode>;
+
+export type IArticles = IConnection<IArticleEdge>;
+
 interface QueryResult {
-  articles: Article[];
+  articles: IArticles;
 }
 
 const ArticlesList = () => {
@@ -33,12 +40,12 @@ const ArticlesList = () => {
 
   return (
     <div>
-      <h3>Articles List (8 items in total)</h3>
+      <h3>Articles List (CDL Implementation)</h3>
       <ol>
-        {data?.articles.map((item) => {
+        {data?.articles?.edges?.map(({ node }) => {
           return (
-            <li key={item.id}>
-              {item.title} by {item.author}
+            <li key={node.id}>
+              {node.title} by {node.author}
             </li>
           );
         })}

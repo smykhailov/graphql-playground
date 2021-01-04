@@ -1,18 +1,22 @@
 import { gql, useQuery } from '@apollo/client';
-import { Feed } from './feed-stream-embedded';
+import { IFeeds } from './feeds-stream-list';
 
 const QUERY = gql`
   query feeds {
     feeds {
-      id
-      title
-      description
+      edges {
+        node {
+          id
+          title
+          description
+        }
+      }
     }
   }
 `;
 
 interface QueryResult {
-  feeds: Feed[];
+  feeds: IFeeds;
 }
 
 const FeedList = () => {
@@ -22,15 +26,15 @@ const FeedList = () => {
   }
 
   if (error) {
-    return <div>Error {error}</div>;
+    return <div>Error {error.message}</div>;
   }
 
   return (
     <div>
-      <h3>Feeds List (6 items in total)</h3>
+      <h3>Feeds List</h3>
       <ol>
-        {data?.feeds.map((item) => {
-          return <li key={item.id}>{item.title}</li>;
+        {data?.feeds?.edges?.map((edge) => {
+          return <li key={edge.node.id}>{edge.node.title}</li>;
         })}
       </ol>
     </div>

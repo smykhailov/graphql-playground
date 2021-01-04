@@ -9,10 +9,10 @@ import { makeExecutableSchema } from '@graphql-tools/schema';
 
 import {
   feedResolver,
-  feedStreamResolver,
   articlesResolver,
-  feedStreamEmbeddedResolver,
-} from './resolver/feed-resolvers';
+  feedsStreamResolver,
+  feedsStreamEdgesResolver,
+} from './resolver/resolvers';
 
 import createGraphQLContext, { IGraphQLContext } from './graphql-context';
 import { StreamLink } from './link/StreamLink';
@@ -38,16 +38,15 @@ export const buildClient: () => ApolloClient<NormalizedCacheObject> = () => {
 
 const queryResolvers = {
   feeds: feedResolver,
-  feedStream: feedStreamResolver,
   articles: articlesResolver,
-  feedStreamEmbedded: feedStreamEmbeddedResolver,
+  feedsStream: feedsStreamResolver,
 };
 
 const buildResolvers: () => ApolloResolvers = () => {
   const resolvers = {
     Query: queryResolvers,
-    FeedStreamEmbedded: {
-      feedStream: feedStreamResolver,
+    FeedsStream: {
+      edges: feedsStreamEdgesResolver,
     },
   };
 

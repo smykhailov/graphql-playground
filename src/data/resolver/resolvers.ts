@@ -9,14 +9,6 @@ export const feedResolver = async (
   return await context.feeds();
 };
 
-export const feedStreamResolver = async (
-  _: object,
-  __: object,
-  context: IGraphQLContext
-) => {
-  return await context.feedsStream();
-};
-
 export const articlesResolver = async (
   _: object,
   __: object,
@@ -25,10 +17,18 @@ export const articlesResolver = async (
   return await context.articles();
 };
 
-export const feedStreamEmbeddedResolver = async (
+export const feedsStreamResolver = async (
   _: object,
-  __: object,
+  { after, first }: { after: string; first: number },
   context: IGraphQLContext
 ) => {
-  return context.feedStreamEmbedded();
+  return context.feedsStream(after, first);
+};
+
+export const feedsStreamEdgesResolver = async (
+  _: object,
+  { after, first }: { after: string; first: number },
+  context: IGraphQLContext
+) => {
+  return context.feedsStreamEdges();
 };

@@ -2,8 +2,7 @@ import { FetchResult, Observable, Operation } from '@apollo/client/core';
 import { SchemaLink } from '@apollo/client/link/schema';
 
 import { AsyncExecutionResult, execute, ExecutionPatchResult } from 'graphql';
-import { cloneDeep, first, get } from 'lodash';
-import deepFreeze from 'deep-freeze';
+import { cloneDeep, first } from 'lodash';
 
 export class StreamLink extends SchemaLink {
   public request(operation: Operation): Observable<FetchResult> {
@@ -27,32 +26,35 @@ export class StreamLink extends SchemaLink {
           return result;
         })
         .then(async (result) => {
-          // const cache = operation.getContext().cache as InMemoryCache;
           if (!observer.closed) {
             if (isAsyncIterable(result)) {
-              let rootTypenameCache: any = {};
+              let initialResult: Record<string, any> = {};
+              let rootName: string | null = null;
+
               for await (const payload of result) {
-                // console.log('payload', cloneDeep(Object.freeze(payload)));
                 if (isExecutionPatchResult(payload) && payload.path) {
                   const data = cloneDeep(payload.data);
-                  const path = [...payload.path!];
+                  initialResult = cloneDeep(initialResult);
+                  const path = [...payload.path];
 
-                  const patch = {
+                  initialResult = {
                     data: generateEmbeddedPatchByPath(
-                      {},
+                      initialResult.data,
                       data,
                       path.slice(0, -1) as string[],
-                      rootTypenameCache
+                      {}
                     ),
                   };
 
-                  observer.next(patch);
+                  if (!rootName) {
+                    rootName = first(path) as string;
+                  }
+
+                  observer.next(initialResult);
                 } else if (payload.data) {
-                  rootTypenameCache = normalizeObjectIntoCacheBy(
-                    payload.data,
-                    '__typename'
-                  );
-                  observer.next(payload);
+                  initialResult = payload;
+
+                  observer.next(initialResult);
                 }
               }
             } else {
@@ -71,8 +73,8 @@ export class StreamLink extends SchemaLink {
   }
 }
 
-interface EmbeddedPatch {
-  [key: string]: EmbeddedPatch | EmbeddedArrayPatch | string;
+interface IEmbeddedPatch {
+  [key: string]: IEmbeddedPatch | EmbeddedArrayPatch;
 }
 
 type EmbeddedArrayPatch = any[];
@@ -82,17 +84,19 @@ const generateEmbeddedPatchByPath = (
   data: any,
   path: string[],
   rootTypenameCache: Record<string, string>
-): EmbeddedPatch => {
-  const firstElement = first(path)!;
+): IEmbeddedPatch => {
+  const firstElement = first(path);
+  if (firstElement === undefined) {
+    return {};
+  }
   return path.length === 1
     ? {
         ...existing,
-        [firstElement]: [...(existing[firstElement] ?? []), data],
+        [firstElement]: [data],
       }
     : {
         ...existing,
         [firstElement]: {
-          __typename: rootTypenameCache[firstElement],
           ...generateEmbeddedPatchByPath(
             existing[firstElement] ?? {},
             data,
@@ -113,22 +117,4 @@ const isExecutionPatchResult = (
   asyncExecutionResulst: AsyncExecutionResult
 ): asyncExecutionResulst is ExecutionPatchResult => {
   return !!(asyncExecutionResulst as ExecutionPatchResult).path;
-};
-
-const normalizeObjectIntoCacheBy = (
-  data: Record<string, any>,
-  propName: string
-): Record<string, string> => {
-  let cache: Record<string, string> = {};
-  Object.entries(data).forEach(([key, value]) => {
-    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-      if (value[propName]) {
-        cache[key] = value[propName];
-      }
-      const embeddedCache = normalizeObjectIntoCacheBy(value, propName);
-      cache = { ...embeddedCache, ...cache };
-    }
-  });
-
-  return cache;
 };
