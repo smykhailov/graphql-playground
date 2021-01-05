@@ -2,6 +2,7 @@ import { gql, useQuery } from '@apollo/client';
 import { ARTICLES_NUMBER } from 'data/graphql-context';
 import { useCallback } from 'react';
 import { IConnection, IEdge, INode } from './feeds-stream-list';
+import useCDLQuery from './hooks/use-cdl-query';
 
 const QUERY = gql`
   query articles($first: Int, $after: String) {
@@ -29,20 +30,22 @@ interface QueryResult {
   articles: IArticles;
 }
 
-const ArticlesList = () => {
-  const { data, loading, error, refetch } = useQuery<QueryResult>(QUERY, {
-    variables: {
-      first: ARTICLES_NUMBER,
-    },
-    partialRefetch: true,
-    notifyOnNetworkStatusChange: true,
-  });
+const predicateToRefetch = (data: QueryResult | undefined) => {
+  return !!data && data.articles.edges.length !== ARTICLES_NUMBER;
+};
 
-  const handleLoadMore = useCallback(() => {
-    refetch({
-      first: ARTICLES_NUMBER,
-    });
-  }, [refetch]);
+const ArticlesList = () => {
+  const { data, loading, error } = useCDLQuery<QueryResult>(
+    QUERY,
+    predicateToRefetch,
+    {
+      variables: {
+        first: ARTICLES_NUMBER,
+      },
+      partialRefetch: true,
+      notifyOnNetworkStatusChange: true,
+    }
+  );
 
   if (loading) {
     return <div>Loading...</div>;
@@ -55,7 +58,6 @@ const ArticlesList = () => {
   return (
     <div>
       <h3>Articles List (CDL Implementation)</h3>
-      <button onClick={handleLoadMore}>Loadmore</button>
       <ol>
         {data?.articles?.edges?.map(({ node }) => {
           return (
