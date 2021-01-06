@@ -46,22 +46,10 @@ type ArticleNode implements Node {
   author: String
 }
 
-type ArticleEdge implements Edge {
-  node: ArticleNode
-  cursor: String!
-}
-
-
-type Articles implements Connection {
-  edges: [ArticleEdge]
-  pageInfo: PageInfo!
-}
-
-
 type Query {
   feeds: Feeds
-  feedsStream(first: Int, after: String) : FeedsStream
-  articles: Articles
+  feedsStream(first: Int, after: String): FeedsStream
+  articles(first: Int!): [ArticleNode]
 }
 `;
 

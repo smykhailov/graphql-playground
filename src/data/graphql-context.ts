@@ -1,11 +1,9 @@
-import { IArticleEdge, IArticles } from 'components/feeds/articles-list';
 import { IFeedEdge, IFeeds } from 'components/feeds/feeds-stream-list';
 import * as faker from 'faker';
 import { sleep } from './utils/sleep';
 
 export interface IGraphQLContext {
   filteredFeedNodes: IFeedEdge[];
-  articles: () => Promise<IArticles>;
   feeds: () => Promise<IFeeds>;
   feedsStream: (after: string, first: number) => Partial<IFeeds>;
   feedsStreamEdges: () => AsyncGenerator<IFeedEdge>;
@@ -22,27 +20,14 @@ export default createGraphQLContext;
 
 interface ICache {
   feeds: IFeedEdge[];
-  articles: IArticleEdge[];
 }
 
 class GraphQLContext implements IGraphQLContext {
   cache: ICache = {
     feeds: this.getFeeds(),
-    articles: this.getPartialArticles(5),
   };
 
   filteredFeedNodes: IFeedEdge[] = [];
-
-  async articles() {
-    return {
-      edges: this.cache.articles,
-      pageInfo: {
-        startCursor: this.cache.articles[0].cursor,
-        endCursor: this.cache.articles[this.cache.articles.length - 1].cursor,
-        hasNextPage: false,
-      },
-    };
-  }
 
   async feeds() {
     return {
@@ -99,25 +84,5 @@ class GraphQLContext implements IGraphQLContext {
       feeds.push({ node, cursor: id });
     }
     return feeds;
-  }
-
-  private getPartialArticles(length: number) {
-    const articles: IArticleEdge[] = [];
-    for (let i = 1; i <= length; i++) {
-      const id = i.toString();
-      const node = {
-        id,
-        title: faker.random.words(5),
-        author: faker.random.words(2),
-      };
-
-      articles.push({ node, cursor: id });
-    }
-    return articles;
-  }
-
-  private async fetchArticles(length: number) {
-    await sleep(SLEEP_TIME_IN_MS);
-    return this.getPartialArticles(length);
   }
 }

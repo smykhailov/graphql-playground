@@ -2,6 +2,11 @@ import { InMemoryCache } from '@apollo/client';
 import { mergeDeep, relayStylePagination } from '@apollo/client/utilities';
 import { TRelayPageInfo } from '@apollo/client/utilities/policies/pagination';
 import { __rest } from 'tslib';
+import { createReactiveField } from './utils/create-reactive-field';
+import { ArticlesService } from './articles-service';
+
+// CDL Service emulation
+const articles = new ArticlesService();
 
 export const cache: InMemoryCache = new InMemoryCache({
   typePolicies: {
@@ -163,6 +168,11 @@ export const cache: InMemoryCache = new InMemoryCache({
             };
           },
         },
+        articles: createReactiveField({
+          getInitialValue: () => articles.getCachedData(),
+          hasMore: () => articles.isExhausted,
+          load: (first) => articles.getNetworkData(first),
+        }),
       },
     },
     FeedsStream: {

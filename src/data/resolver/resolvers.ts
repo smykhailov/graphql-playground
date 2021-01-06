@@ -9,14 +9,6 @@ export const feedResolver = async (
   return await context.feeds();
 };
 
-export const articlesResolver = async (
-  _: object,
-  __: object,
-  context: IGraphQLContext
-) => {
-  return await context.articles();
-};
-
 export const feedsStreamResolver = async (
   _: object,
   { after, first }: { after: string; first: number },
