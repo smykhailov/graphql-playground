@@ -5,9 +5,9 @@ import FeedsStreamList from './feeds-stream-list';
 const FeedsContainer = () => {
   return (
     <div style={{ display: 'flex' }}>
-      <FeedsList />
+      {/* <FeedsList /> */}
       <FeedsStreamList />
-      <ArticlesList />
+      {/* <ArticlesList /> */}
     </div>
   );
 };

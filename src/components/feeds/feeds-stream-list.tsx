@@ -1,5 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
-import { useCallback } from 'react';
+import { FEEDS_COUNT } from 'data/data-sources/feeds';
 
 const QUERY = gql`
   query feedsStream($first: Int, $after: String) {
@@ -11,11 +11,6 @@ const QUERY = gql`
           description
         }
         cursor
-      }
-      pageInfo {
-        startCursor
-        endCursor
-        hasNextPage
       }
     }
   }
@@ -55,23 +50,16 @@ interface QueryResult {
 }
 
 const FeedsStreamList = () => {
-  const { data, error, refetch } = useQuery<QueryResult>(QUERY, {
+  const { data, error } = useQuery<QueryResult>(QUERY, {
     variables: {
-      first: 3,
+      first: FEEDS_COUNT,
     },
     partialRefetch: true,
     notifyOnNetworkStatusChange: true,
   });
 
-  const handleLoadMore = useCallback(() => {
-    refetch({
-      first: 5,
-      after: data?.feedsStream.pageInfo.endCursor,
-    });
-  }, [refetch, data?.feedsStream.pageInfo.endCursor]);
-
   if (error) {
-    return <div>Error {error}</div>;
+    return <div>Error {error.message}</div>;
   }
 
   return (
@@ -82,7 +70,6 @@ const FeedsStreamList = () => {
           return <li key={edge.node.id}>{edge.node.title}</li>;
         })}
       </ol>
-      <button onClick={handleLoadMore}>Loadmore</button>
     </div>
   );
 };
