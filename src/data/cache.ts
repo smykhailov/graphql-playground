@@ -5,8 +5,10 @@ import { __rest } from 'tslib';
 import { createReactiveField } from './utils/create-reactive-field';
 import { ArticlesService } from './articles-service';
 
-// CDL Service emulation
-const articles = new ArticlesService();
+// used for reactive variable example
+const articlesReactive = new ArticlesService();
+// used for lazy query example
+export const articlesLazy = new ArticlesService();
 
 export const cache: InMemoryCache = new InMemoryCache({
   typePolicies: {
@@ -169,10 +171,23 @@ export const cache: InMemoryCache = new InMemoryCache({
           },
         },
         articles: createReactiveField({
-          getInitialValue: () => articles.getCachedData(),
-          hasMore: () => articles.isExhausted,
-          load: (first) => articles.getNetworkData(first),
+          getInitialValue: () => articlesReactive.getCachedData(),
+          hasMore: () => articlesReactive.isExhausted,
+          load: (first) => articlesReactive.getNetworkData(first),
         }),
+        articlesLazy: {
+          keyArgs: false,
+          merge: (existing, incoming) => {
+            const merged = existing ? [...existing, ...incoming] : incoming;
+            console.log('merge', { merged });
+            return merged;
+          },
+          read: (existing) => {
+            const items = existing ?? articlesLazy.getCachedData();
+            console.log('read', { data: items });
+            return items;
+          },
+        },
       },
     },
     FeedsStream: {

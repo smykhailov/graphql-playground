@@ -20,7 +20,7 @@ export class ArticlesService {
     return this.cache.slice(0, first);
   }
 
-  async getNetworkData(first: number) {
+  async getNetworkData(first: number = ARTICLES_COUNT) {
     if (first < this.cache.length) {
       return this.getCachedData(first);
     }

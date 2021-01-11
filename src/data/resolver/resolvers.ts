@@ -1,4 +1,9 @@
 import { IGraphQLContext } from 'data/graphql-context';
+import { articlesLazy } from '../cache';
+
+export const articlesLazyResolver = async () => {
+  return articlesLazy.getNetworkData();
+};
 
 // TODO: is there simplified way to declare resolver type?
 export const feedResolver = async (

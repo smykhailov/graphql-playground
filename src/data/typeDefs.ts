@@ -50,6 +50,7 @@ type Query {
   feeds: Feeds
   feedsStream(first: Int, after: String): FeedsStream
   articles(first: Int!): [ArticleNode]
+  articlesLazy: [ArticleNode]
 }
 `;
 

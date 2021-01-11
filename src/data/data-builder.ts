@@ -11,6 +11,7 @@ import {
   feedResolver,
   feedsStreamResolver,
   feedsStreamEdgesResolver,
+  articlesLazyResolver,
 } from './resolver/resolvers';
 
 import createGraphQLContext, { IGraphQLContext } from './graphql-context';
@@ -36,6 +37,7 @@ export const buildClient: () => ApolloClient<NormalizedCacheObject> = () => {
 };
 
 const queryResolvers = {
+  articlesLazy: articlesLazyResolver,
   feeds: feedResolver,
   feedsStream: feedsStreamResolver,
 };
