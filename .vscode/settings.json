@@ -11,5 +11,11 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "cSpell.words": [
     "codegen"
-  ]
+  ],
+  "workbench.colorCustomizations": {
+    "titleBar.activeForeground": "#000",
+    "titleBar.inactiveForeground": "#000000CC",
+    "titleBar.activeBackground": "#ff00ff",
+    "titleBar.inactiveBackground": "#ff00f2cc"
+  }
 }
