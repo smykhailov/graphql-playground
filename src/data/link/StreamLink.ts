@@ -2,7 +2,7 @@ import { FetchResult, Observable, Operation } from '@apollo/client/core';
 import { SchemaLink } from '@apollo/client/link/schema';
 
 import { AsyncExecutionResult, execute, ExecutionPatchResult } from 'graphql';
-import { cloneDeep, first } from 'lodash';
+import { cloneDeep, first, get } from 'lodash';
 
 export class StreamLink extends SchemaLink {
   public request(operation: Operation): Observable<FetchResult> {
@@ -23,38 +23,39 @@ export class StreamLink extends SchemaLink {
             operation.variables,
             operation.operationName
           );
-          return result;
+          return { result, context };
         })
-        .then(async (result) => {
+        .then(async ({ result, context }) => {
           if (!observer.closed) {
             if (isAsyncIterable(result)) {
               let initialResult: Record<string, any> = {};
-              let rootName: string | null = null;
 
               for await (const payload of result) {
                 if (isExecutionPatchResult(payload) && payload.path) {
                   const data = cloneDeep(payload.data);
                   initialResult = cloneDeep(initialResult);
                   const path = [...payload.path];
+                  const slicedPath = path.slice(0, -1) as string[];
 
-                  initialResult = {
-                    data: generateEmbeddedPatchByPath(
+                  initialResult = getHydratedInitialResult(
+                    initialResult.data,
+                    data,
+                    slicedPath
+                  );
+
+                  if (
+                    initialResult.data.feedsStream.edges.length ===
+                    get(context.streamedFieldsPackageSize, slicedPath.join('/'))
+                  ) {
+                    observer.next(initialResult);
+                    initialResult = getEmptyInitialResult(
                       initialResult.data,
-                      data,
-                      path.slice(0, -1) as string[],
-                      {}
-                    ),
-                  };
-
-                  if (!rootName) {
-                    rootName = first(path) as string;
+                      slicedPath
+                    );
                   }
-
-                  observer.next(initialResult);
                 } else if (payload.data) {
                   initialResult = payload;
-
-                  observer.next(initialResult);
+                  // TODO: cover when on
                 }
               }
             } else {
@@ -79,11 +80,18 @@ interface IEmbeddedPatch {
 
 type EmbeddedArrayPatch = any[];
 
+const getHydratedInitialResult = (
+  existing: Record<string, any>,
+  data: any,
+  path: string[]
+) => ({
+  data: generateEmbeddedPatchByPath(existing, data, path),
+});
+
 const generateEmbeddedPatchByPath = (
   existing: Record<string, any>,
   data: any,
-  path: string[],
-  rootTypenameCache: Record<string, string>
+  path: string[]
 ): IEmbeddedPatch => {
   const firstElement = first(path);
   if (firstElement === undefined) {
@@ -92,7 +100,7 @@ const generateEmbeddedPatchByPath = (
   return path.length === 1
     ? {
         ...existing,
-        [firstElement]: [data],
+        [firstElement]: [...existing[firstElement], data],
       }
     : {
         ...existing,
@@ -100,8 +108,35 @@ const generateEmbeddedPatchByPath = (
           ...generateEmbeddedPatchByPath(
             existing[firstElement] ?? {},
             data,
-            path.slice(1),
-            rootTypenameCache
+            path.slice(1)
+          ),
+        },
+      };
+};
+
+const getEmptyInitialResult = (data: Record<string, any>, path: string[]) => ({
+  data: cleanEmbeddedPatchByPath(data, path),
+});
+
+const cleanEmbeddedPatchByPath = (
+  existing: Record<string, any>,
+  path: string[]
+): IEmbeddedPatch => {
+  const firstElement = first(path);
+  if (firstElement === undefined) {
+    return {};
+  }
+  return path.length === 1
+    ? {
+        ...existing,
+        [firstElement]: [],
+      }
+    : {
+        ...existing,
+        [firstElement]: {
+          ...cleanEmbeddedPatchByPath(
+            existing[firstElement] ?? {},
+            path.slice(1)
           ),
         },
       };

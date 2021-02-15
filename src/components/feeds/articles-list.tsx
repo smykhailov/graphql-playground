@@ -1,4 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
+import { ARTICLES_COUNT } from 'data/data-sources/articles';
 import { IConnection, IEdge, INode } from './feeds-stream-list';
 
 const QUERY = gql`
@@ -28,14 +29,18 @@ interface QueryResult {
 }
 
 const ArticlesList = () => {
-  const { data, loading, error } = useQuery<QueryResult>(QUERY);
+  const { data, loading, error } = useQuery<QueryResult>(QUERY, {
+    variables: {
+      first: ARTICLES_COUNT,
+    },
+  });
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
   if (error) {
-    return <div>Error {error}</div>;
+    return <div>Error {error.message}</div>;
   }
 
   return (

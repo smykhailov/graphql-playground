@@ -1,4 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
+import { FEEDS_COUNT } from 'data/data-sources/feeds';
 import { IFeeds } from './feeds-stream-list';
 
 const QUERY = gql`
@@ -20,7 +21,11 @@ interface QueryResult {
 }
 
 const FeedList = () => {
-  const { data, loading, error } = useQuery<QueryResult>(QUERY);
+  const { data, loading, error } = useQuery<QueryResult>(QUERY, {
+    variables: {
+      first: FEEDS_COUNT,
+    },
+  });
   if (loading) {
     return <div>Loading...</div>;
   }
