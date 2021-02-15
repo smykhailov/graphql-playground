@@ -2,6 +2,13 @@ import { InMemoryCache } from '@apollo/client';
 import { mergeDeep, relayStylePagination } from '@apollo/client/utilities';
 import { TRelayPageInfo } from '@apollo/client/utilities/policies/pagination';
 import { __rest } from 'tslib';
+import { createReactiveField } from './utils/create-reactive-field';
+import { ArticlesService } from './articles-service';
+
+// used for reactive variable example
+const articlesReactive = new ArticlesService();
+// used for lazy query example
+export const articlesLazy = new ArticlesService();
 
 export const cache: InMemoryCache = new InMemoryCache({
   typePolicies: {
@@ -161,6 +168,24 @@ export const cache: InMemoryCache = new InMemoryCache({
               edges,
               pageInfo,
             };
+          },
+        },
+        articles: createReactiveField({
+          getInitialValue: () => articlesReactive.getCachedData(),
+          hasMore: () => articlesReactive.isExhausted,
+          load: (first) => articlesReactive.getNetworkData(first),
+        }),
+        articlesLazy: {
+          keyArgs: false,
+          merge: (existing, incoming) => {
+            const merged = existing ? [...existing, ...incoming] : incoming;
+            console.log('merge', { merged });
+            return merged;
+          },
+          read: (existing) => {
+            const items = existing ?? articlesLazy.getCachedData();
+            console.log('read', { data: items });
+            return items;
           },
         },
       },

@@ -1,57 +1,55 @@
 import { gql, useQuery } from '@apollo/client';
-import { IConnection, IEdge, INode } from './feeds-stream-list';
+import { INode } from './feeds-stream-list';
 
 const QUERY = gql`
-  query articles {
-    articles {
-      edges {
-        node {
-          id
-          title
-          author
-        }
-      }
+  query articles($first: Int!) {
+    articles(first: $first) @client {
+      id
+      title
+      author
     }
   }
 `;
+
 export interface IArticleNode extends INode {
   title: string;
   author: string;
 }
 
-export type IArticleEdge = IEdge<IArticleNode>;
-
-export type IArticles = IConnection<IArticleEdge>;
-
 interface QueryResult {
-  articles: IArticles;
+  articles: IArticleNode[];
 }
 
 const ArticlesList = () => {
-  const { data, loading, error } = useQuery<QueryResult>(QUERY);
+  const { data, loading, error } = useQuery<QueryResult>(QUERY, {
+    variables: {
+      first: 20,
+    },
+  });
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error {error}</div>;
-  }
+  const items = data?.articles ?? [];
+  console.log(`render ${items.length} items!`);
+  const content = loading ? (
+    <div>Loading...</div>
+  ) : error ? (
+    <div>Error {error}</div>
+  ) : (
+    <ol>
+      {items.map((item) => {
+        return (
+          <li key={item.id}>
+            {item.title} by {item.author}
+          </li>
+        );
+      })}
+    </ol>
+  );
 
   return (
     <div>
       <h3>Articles List (CDL Implementation)</h3>
-      <ol>
-        {data?.articles?.edges?.map(({ node }) => {
-          return (
-            <li key={node.id}>
-              {node.title} by {node.author}
-            </li>
-          );
-        })}
-      </ol>
+      {content}
     </div>
   );
 };
-
 export default ArticlesList;
