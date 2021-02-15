@@ -1,9 +1,12 @@
 import { gql, useQuery } from '@apollo/client';
+import { ARTICLES_NUMBER } from 'data/graphql-context';
+import { useCallback } from 'react';
 import { IConnection, IEdge, INode } from './feeds-stream-list';
+import useCDLQuery from './hooks/use-cdl-query';
 
 const QUERY = gql`
-  query articles {
-    articles {
+  query articles($first: Int, $after: String) {
+    articles(first: $first, after: $after) {
       edges {
         node {
           id
@@ -27,8 +30,22 @@ interface QueryResult {
   articles: IArticles;
 }
 
+const predicateToRefetch = (data: QueryResult | undefined) => {
+  return !!data && data.articles.edges.length !== ARTICLES_NUMBER;
+};
+
 const ArticlesList = () => {
-  const { data, loading, error } = useQuery<QueryResult>(QUERY);
+  const { data, loading, error } = useCDLQuery<QueryResult>(
+    QUERY,
+    predicateToRefetch,
+    {
+      variables: {
+        first: ARTICLES_NUMBER,
+      },
+      partialRefetch: true,
+      notifyOnNetworkStatusChange: true,
+    }
+  );
 
   if (loading) {
     return <div>Loading...</div>;
